@@ -1,105 +1,158 @@
-let computerScore = 0 
-let playerScore = 0
-let round = 0
-let computerSelection
-let playerSelection
+let computerScore = 0;
+let playerScore = 0;
+let computerSelection;
+let playerSelection;
+
+
+
+
+const head1 = document.querySelector("h1");
+const head2 = document.querySelector("h2");
+const head3 = document.querySelector("h3");
+
+
+
+
+const hideWeapons1 = document.querySelector("#rock-btn");
+const hideWeapons2 = document.querySelector("#paper-btn");
+const hideWeapons3 = document.querySelector("#scissors-btn");
+
+
+
+
+const restartBtn = document.querySelector("#restart")
+restartBtn.addEventListener( 'click', restartGame)
+
+
+
+
+
+
+// These event listener handle user input for the game
+const selectRock = document.querySelector("#rock-btn");
+selectRock.addEventListener('click',rock);
+
+const selectPaper = document.querySelector("#paper-btn");
+selectPaper.addEventListener('click',paper);
+
+const selectScissors = document.querySelector("#scissors-btn");
+selectScissors.addEventListener('click',scissors);
+
+
+
+
+
+
+
+
+// These function are used in eventlisteners.
+function scissors(){
+    playerSelection = "SCISSORS";
+    game(playerSelection,computerPlay);
+}
+function paper(){
+    playerSelection = "PAPER";
+    game(playerSelection,computerPlay);
+}
+function rock(){
+    playerSelection = "ROCK";
+    game(playerSelection, computerPlay);
+}
+
+
+
+
+
+
+// This function restart the game.
+function restartGame(){
+    playerScore = 0 ;
+    computerScore = 0; 
+    hideWeapons1.classList.remove("hidden");
+    hideWeapons2.classList.remove("hidden");
+    hideWeapons3.classList.remove("hidden");
+    restartBtn.classList.add("hidden")
+    head1.textContent = " ";
+    head2.textContent = " ";
+    head3.textContent = " ";
+}
+
+
+
+
+
 
 // This function provides random selection out of an array
 function computerPlay(){
     let choices = ["ROCK", "PAPER", "SCISSORS"];
-    let computerSelection = choices[Math.floor(Math.random() * Math.floor(3))];
-    return computerSelection;
-}
-// This function takes input from user and capitalize it.
-function playerInput(){
-    let playerSelect = prompt("Please enter 'Rock','Paper' or 'Scissors'.");
-    return playerSelect.toUpperCase();
+    let computerSelect = choices[Math.floor(Math.random() * Math.floor(3))];
+    return computerSelect;
 }
 
-// This function verifies user input
-function verify(x){
-    if( x === 'ROCK' || x ==='SCISSORS' || x ==='PAPER'){
-        logic(computerSelection, playerSelection, round);
-    }
-    else{
-        alert("You Entered wrong text. Please try again");
-        game();
-    }
-}
+
+
+
+
+
 // This function runs when user wins the game round.
 function userVictory(){
-    round += 1;
     playerScore += 1;
-    alert(`You won this round. You choose ${playerSelection} and computer selected ${computerSelection}`);
+    head1.textContent = "You won the round";
+    head2.textContent = playerSelection + " beats " + computerSelection;
 }
 // This function runs when computer wins the game round.
 function computerVictory(){
-    round += 1;
     computerScore += 1;
-    alert(`You lost this round. You choose ${playerSelection} and computer selected ${computerSelection}`);
+    head1.textContent = "You lost the round";
+    head2.textContent = computerSelection + " beats " + playerSelection;
 }
 // This function runs when it's a draw.
 function draw(){
-    round += 1;
-    alert(`It's a draw. You selected ${playerSelection}`);
+    head1.textContent = "It's a draw.";
 }
-// This function is executed at the end of the game.
-function gameEnd(){
-    if(computerScore > playerScore){
-        alert(`You lost the game. Score is ${playerScore}:${computerScore}`);
-    }
-    else if(computerScore<playerScore){
-        alert(`You won the game. Score is ${playerScore}:${computerScore}`);
-    }
-    else{
-        alert(`It's a tie. Score is ${playerScore}:${computerScore}`);
-    }
-    }
-function gameContinue(){
+
+
+
+
+
+// This fuction evaluates the choices and decide the winner.
+function game(playerSelection, computerSelectFunction){
+    computerSelection = computerSelectFunction();
     if (computerSelection === playerSelection){
         draw();
-    }
-    else if( computerSelection ==='ROCK'){
-        if(playerSelection ==='PAPER'){
+    }else if(computerSelection ==="ROCK" && playerSelection ==="PAPER" ||
+    computerSelection === "PAPER" && playerSelection === "SCISSORS" ||
+    computerSelection === "SCISSORS" && playerSelection === "ROCK"){
         userVictory();
-        } else if(playerSelection ==='SCISSORS'){
+    }else if(computerSelection ==="PAPER" && playerSelection ==="ROCK" ||
+    computerSelection === "SCISSORS" && playerSelection === "PAPER" ||
+    computerSelection === "ROCK" && playerSelection === "SCISSORS"){
         computerVictory();
-        }
     }
-    else if ( computerSelection === 'PAPER'){
-        if(playerSelection ==='ROCK'){
-         computerVictory();
-        }
-        else if(playerSelection === 'SCISSORS'){
-        userVictory();
-        }
-    }
-    else if(computerSelection ==='SCISSORS'){
-        if(playerSelection === 'PAPER'){
-            computerVictory();
-        }
-        else if(playerSelection === 'ROCK'){
-        userVictory();
-        }
-    }
+    head3.textContent = "Player Score: " + playerScore + "| Computer Score: " + computerScore ;
+    roundTest();
 }
-// This function evaluates computerSelection against playerSelection to decide victory.
-function roundTest(computerSelection, playerSelection, round){
-    if(round == 5){
-        gameEnd();
+
+
+
+
+// This function checks the game when any player hits score of 5.
+function roundTest(){
+    if(computerScore == 5){
+        head1.textContent = "Game Ends.";
+        head2.textContent = "Computer won the game.";
+        hideWeapons1.classList.add("hidden");
+        hideWeapons2.classList.add("hidden");
+        hideWeapons3.classList.add("hidden");
+        restartBtn.classList.remove("hidden");
         }
-    else{
-        gameContinue(); 
-        }
+    else if(playerScore == 5){
+        head1.textContent = "Game Ends.";
+        head2.textContent = "You won the game.";
+        hideWeapons1.classList.add("hidden");
+        hideWeapons2.classList.add("hidden");
+        hideWeapons3.classList.add("hidden");
+        restartBtn.classList.remove("hidden");
     }
-function game(){
-    playerSelection = playerInput();
-    computerSelection = computerPlay();
-    verify(playerSelection)
-}
-game();
-game();
-game();
-game();
-game();
-game();
+    head3.textContent = "Player Score: " + playerScore + "| Computer Score: " + computerScore ;
+    }
